@@ -10,15 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { SourcePicker } from "./SourcePicker";
 import { usePrefs } from "@/lib/storage/preferences";
-
-const SOURCES = [
-  { id: "mangadex", name: "MangaDex" },
-  { id: "weebcentral", name: "WeebCentral" },
-  { id: "asura", name: "AsuraScans" },
-  { id: "mangadna", name: "MangaDNA" },
-  { id: "mangafire", name: "MangaFire" },
-  { id: "mangakakalot", name: "MangaKakalot" },
-];
+import type { VisibleSource } from "@/lib/sources/visibility";
 
 function NavLink({
   href,
@@ -108,7 +100,7 @@ function SearchForm({
   );
 }
 
-export function TopNav() {
+export function TopNav({ sources }: { sources: VisibleSource[] }) {
   const pathname = usePathname();
   const router = useRouter();
   const params = useSearchParams();
@@ -175,7 +167,7 @@ export function TopNav() {
           <Search className="h-4 w-4" />
         </Button>
 
-        <SourcePicker sources={SOURCES} />
+        <SourcePicker sources={sources} />
         <ThemeToggle />
       </div>
 

@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Providers } from "./providers";
 import { TopNav } from "@/components/nav/TopNav";
+import { getVisibleSources } from "@/lib/sources/visibility";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const sources = getVisibleSources();
   return (
     <html
       lang="en"
@@ -34,7 +36,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>
           <Suspense fallback={null}>
-            <TopNav />
+            <TopNav sources={sources} />
           </Suspense>
           <main className="flex-1">{children}</main>
         </Providers>
