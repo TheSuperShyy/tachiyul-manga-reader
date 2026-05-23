@@ -185,25 +185,24 @@ export const mangadna: MangaSource = {
     const $ = cheerio.load(html);
 
     const urls: string[] = [];
-    $(".reader-content img, .chapter-content img, #chapter-content img, img.page-img, img[data-page]").each(
+    $(".read-content img.myx01, .read-content img[data-src], .read-manga img[data-src]").each(
       (_, img) => {
-        const src = $(img).attr("src") ?? $(img).attr("data-src");
+        const src = $(img).attr("data-src") ?? $(img).attr("src");
         if (src && /\.(jpe?g|png|webp)/i.test(src)) urls.push(src);
       },
     );
 
     if (urls.length === 0) {
       $("img").each((_, img) => {
-        const src = $(img).attr("src") ?? $(img).attr("data-src");
+        const src = $(img).attr("data-src") ?? $(img).attr("src");
         if (!src) return;
         if (!/\.(jpe?g|png|webp)/i.test(src)) return;
-        if (src.includes("/icon") || src.includes("logo") || src.includes("avatar")) return;
-        if (src.match(/\/\d+\.(jpe?g|png|webp)/) || src.match(/chapter[-_]/i)) {
+        if (src.includes("cdn") && src.includes("mangadna.com")) {
           urls.push(src);
         }
       });
     }
 
-    return { chapterId, urls };
+    return { chapterId, urls: Array.from(new Set(urls)) };
   },
 };
