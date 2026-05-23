@@ -61,11 +61,9 @@ export const mangadna: MangaSource = {
 
   async search(query, opts) {
     const limit = opts?.limit ?? 30;
-    const html = await tryFetchHtml([
-      `${BASE}/search?keyword=${encodeURIComponent(query)}`,
+    const html = await fetchHtml(
       `${BASE}/search?q=${encodeURIComponent(query)}`,
-      `${BASE}/?s=${encodeURIComponent(query)}`,
-    ]);
+    );
     return paginate(parseMangaList(html).slice(0, limit));
   },
 
