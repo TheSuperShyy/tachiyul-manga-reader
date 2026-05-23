@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { SourcePicker } from "./SourcePicker";
-import { usePrefs } from "@/lib/storage/preferences";
 import type { VisibleSource } from "@/lib/sources/visibility";
 
 function NavLink({
@@ -104,7 +103,6 @@ export function TopNav({ sources }: { sources: VisibleSource[] }) {
   const pathname = usePathname();
   const router = useRouter();
   const params = useSearchParams();
-  const activeSourceId = usePrefs((s) => s.activeSourceId);
   const [q, setQ] = React.useState(params.get("q") ?? "");
   const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
 
@@ -112,19 +110,11 @@ export function TopNav({ sources }: { sources: VisibleSource[] }) {
     setQ(params.get("q") ?? "");
   }, [params]);
 
-  function sourceFromPath(): string | null {
-    const m = pathname.match(/^\/(?:manga|read)\/([^/]+)/);
-    return m?.[1] ?? null;
-  }
-
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const term = q.trim();
     if (!term) return;
-    const source =
-      params.get("source") ?? sourceFromPath() ?? activeSourceId;
     const qs = new URLSearchParams({ q: term });
-    if (source) qs.set("source", source);
     router.push(`/search?${qs.toString()}`);
     setMobileSearchOpen(false);
   }
