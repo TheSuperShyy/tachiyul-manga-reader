@@ -7,7 +7,7 @@ import type {
   PageList,
   Paginated,
 } from "@/lib/sources/types";
-import { fetchHtml, fetchJson } from "@/lib/sources/http";
+import { fetchHtml, fetchJson, tryFetchHtml } from "@/lib/sources/http";
 
 const BASE = "https://mangafire.to";
 
@@ -61,59 +61,32 @@ export const mangafire: MangaSource = {
 
   async search(query, opts) {
     const limit = opts?.limit ?? 30;
-    const candidates = [
+    const html = await tryFetchHtml([
       `${BASE}/filter?keyword=${encodeURIComponent(query)}&language%5B%5D=en`,
       `${BASE}/search?keyword=${encodeURIComponent(query)}`,
-    ];
-    for (const url of candidates) {
-      try {
-        const html = await fetchHtml(url);
-        const items = parseMangaCards(html);
-        if (items.length > 0) return paginate(items.slice(0, limit));
-      } catch {
-        /* try next */
-      }
-    }
-    return paginate([]);
+    ]);
+    return paginate(parseMangaCards(html).slice(0, limit));
   },
 
   async popular(opts) {
     const limit = opts?.limit ?? 24;
-    const candidates = [
+    const html = await tryFetchHtml([
       `${BASE}/filter?sort=most_viewed&language%5B%5D=en`,
       `${BASE}/popular`,
       `${BASE}/home`,
       `${BASE}/`,
-    ];
-    for (const url of candidates) {
-      try {
-        const html = await fetchHtml(url);
-        const items = parseMangaCards(html);
-        if (items.length > 0) return paginate(items.slice(0, limit));
-      } catch {
-        /* try next */
-      }
-    }
-    return paginate([]);
+    ]);
+    return paginate(parseMangaCards(html).slice(0, limit));
   },
 
   async latest(opts) {
     const limit = opts?.limit ?? 24;
-    const candidates = [
+    const html = await tryFetchHtml([
       `${BASE}/filter?sort=recently_updated&language%5B%5D=en`,
       `${BASE}/updated`,
       `${BASE}/`,
-    ];
-    for (const url of candidates) {
-      try {
-        const html = await fetchHtml(url);
-        const items = parseMangaCards(html);
-        if (items.length > 0) return paginate(items.slice(0, limit));
-      } catch {
-        /* try next */
-      }
-    }
-    return paginate([]);
+    ]);
+    return paginate(parseMangaCards(html).slice(0, limit));
   },
 
   async getManga(mangaId): Promise<MangaDetail> {

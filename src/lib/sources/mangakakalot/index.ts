@@ -7,7 +7,7 @@ import type {
   PageList,
   Paginated,
 } from "@/lib/sources/types";
-import { fetchHtml } from "@/lib/sources/http";
+import { fetchHtml, tryFetchHtml } from "@/lib/sources/http";
 
 const BASE = "https://mangakakalot.fun";
 
@@ -67,59 +67,32 @@ export const mangakakalot: MangaSource = {
   async search(query, opts) {
     const limit = opts?.limit ?? 30;
     const slug = query.trim().toLowerCase().replace(/\s+/g, "_");
-    const candidates = [
+    const html = await tryFetchHtml([
       `${BASE}/search/story/${slug}`,
       `${BASE}/search/${encodeURIComponent(query)}`,
       `${BASE}/search?q=${encodeURIComponent(query)}`,
-    ];
-    for (const url of candidates) {
-      try {
-        const html = await fetchHtml(url);
-        const items = parseMangaCards(html);
-        if (items.length > 0) return paginate(items.slice(0, limit));
-      } catch {
-        /* try next */
-      }
-    }
-    return paginate([]);
+    ]);
+    return paginate(parseMangaCards(html).slice(0, limit));
   },
 
   async popular(opts) {
     const limit = opts?.limit ?? 24;
-    const candidates = [
+    const html = await tryFetchHtml([
       `${BASE}/manga_list?type=topview&category=all&state=all&page=1`,
       `${BASE}/popular`,
       `${BASE}/`,
-    ];
-    for (const url of candidates) {
-      try {
-        const html = await fetchHtml(url);
-        const items = parseMangaCards(html);
-        if (items.length > 0) return paginate(items.slice(0, limit));
-      } catch {
-        /* try next */
-      }
-    }
-    return paginate([]);
+    ]);
+    return paginate(parseMangaCards(html).slice(0, limit));
   },
 
   async latest(opts) {
     const limit = opts?.limit ?? 24;
-    const candidates = [
+    const html = await tryFetchHtml([
       `${BASE}/manga_list?type=latest&category=all&state=all&page=1`,
       `${BASE}/latest`,
       `${BASE}/`,
-    ];
-    for (const url of candidates) {
-      try {
-        const html = await fetchHtml(url);
-        const items = parseMangaCards(html);
-        if (items.length > 0) return paginate(items.slice(0, limit));
-      } catch {
-        /* try next */
-      }
-    }
-    return paginate([]);
+    ]);
+    return paginate(parseMangaCards(html).slice(0, limit));
   },
 
   async getManga(mangaId): Promise<MangaDetail> {

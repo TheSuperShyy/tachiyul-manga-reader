@@ -56,3 +56,19 @@ export async function fetchJson<T>(
   }
   return res.json() as Promise<T>;
 }
+
+export async function tryFetchHtml(
+  urls: string[],
+  opts: FetchOpts = {},
+): Promise<string> {
+  let lastErr: unknown;
+  for (const url of urls) {
+    try {
+      const html = await fetchHtml(url, opts);
+      if (html && html.length > 200) return html;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr ?? new Error(`All candidate URLs failed`);
+}

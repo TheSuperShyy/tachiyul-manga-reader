@@ -7,7 +7,7 @@ import type {
   PageList,
   Paginated,
 } from "@/lib/sources/types";
-import { fetchHtml } from "@/lib/sources/http";
+import { fetchHtml, tryFetchHtml } from "@/lib/sources/http";
 
 const BASE = "https://mangadna.com";
 
@@ -61,43 +61,32 @@ export const mangadna: MangaSource = {
 
   async search(query, opts) {
     const limit = opts?.limit ?? 30;
-    const candidates = [
+    const html = await tryFetchHtml([
       `${BASE}/search?keyword=${encodeURIComponent(query)}`,
       `${BASE}/search?q=${encodeURIComponent(query)}`,
       `${BASE}/?s=${encodeURIComponent(query)}`,
-    ];
-    for (const url of candidates) {
-      try {
-        const html = await fetchHtml(url);
-        const items = parseMangaList(html);
-        if (items.length > 0) return paginate(items.slice(0, limit));
-      } catch {
-        /* try next */
-      }
-    }
-    return paginate([]);
+    ]);
+    return paginate(parseMangaList(html).slice(0, limit));
   },
 
   async popular(opts) {
     const limit = opts?.limit ?? 24;
-    const html = await fetchHtml(`${BASE}/manga-list/all/all/popular/1`);
-    let items = parseMangaList(html);
-    if (items.length === 0) {
-      const home = await fetchHtml(`${BASE}/`);
-      items = parseMangaList(home);
-    }
-    return paginate(items.slice(0, limit));
+    const html = await tryFetchHtml([
+      `${BASE}/manga-list/all/all/popular/1`,
+      `${BASE}/popular`,
+      `${BASE}/`,
+    ]);
+    return paginate(parseMangaList(html).slice(0, limit));
   },
 
   async latest(opts) {
     const limit = opts?.limit ?? 24;
-    const html = await fetchHtml(`${BASE}/manga-list/all/all/latest/1`);
-    let items = parseMangaList(html);
-    if (items.length === 0) {
-      const home = await fetchHtml(`${BASE}/`);
-      items = parseMangaList(home);
-    }
-    return paginate(items.slice(0, limit));
+    const html = await tryFetchHtml([
+      `${BASE}/manga-list/all/all/latest/1`,
+      `${BASE}/latest`,
+      `${BASE}/`,
+    ]);
+    return paginate(parseMangaList(html).slice(0, limit));
   },
 
   async getManga(mangaId): Promise<MangaDetail> {
