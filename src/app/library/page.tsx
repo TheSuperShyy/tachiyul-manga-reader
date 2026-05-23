@@ -11,8 +11,13 @@ export default function LibraryPage() {
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
 
-  const entries = useLibrary((s) => s.list());
+  const entriesMap = useLibrary((s) => s.entries);
   const progress = useProgress((s) => s.entries);
+  const entries = React.useMemo(
+    () =>
+      Object.values(entriesMap).sort((a, b) => b.addedAt - a.addedAt),
+    [entriesMap],
+  );
 
   if (!mounted) {
     return (

@@ -10,6 +10,10 @@ const ALLOWED_HOSTS = new Set([
   "asura.gg",
   "weebcentral.com",
   "temp.compsci88.com",
+  "scans.lastation.us",
+  "official.lowee.us",
+  "hot.leanbox.us",
+  "official.s2.mangapark.fun",
 ]);
 
 const ALLOWED_HOST_SUFFIXES = [

@@ -1,12 +1,10 @@
 import type { MangaSource } from "./types";
 import { mangadex } from "./mangadex";
-import { comick } from "./comick";
 import { weebcentral } from "./weebcentral";
 import { asura } from "./asura";
 
 const sources: Record<string, MangaSource> = {
   [mangadex.id]: mangadex,
-  [comick.id]: comick,
   [weebcentral.id]: weebcentral,
   [asura.id]: asura,
 };

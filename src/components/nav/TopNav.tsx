@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
-import { Search, Library, Home, Moon, Sun } from "lucide-react";
+import { Search, Library, Home, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -13,7 +13,6 @@ import { usePrefs } from "@/lib/storage/preferences";
 
 const SOURCES = [
   { id: "mangadex", name: "MangaDex" },
-  { id: "comick", name: "Comick" },
   { id: "weebcentral", name: "WeebCentral" },
   { id: "asura", name: "AsuraScans" },
 ];
@@ -66,25 +65,73 @@ function ThemeToggle() {
   );
 }
 
+function SearchForm({
+  q,
+  setQ,
+  onSubmit,
+  autoFocus,
+  onClose,
+}: {
+  q: string;
+  setQ: (v: string) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  autoFocus?: boolean;
+  onClose?: () => void;
+}) {
+  return (
+    <form onSubmit={onSubmit} className="flex w-full items-center gap-2">
+      <div className="relative w-full">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search manga…"
+          className="pl-9"
+          autoFocus={autoFocus}
+        />
+      </div>
+      {onClose && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          aria-label="Close search"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      )}
+    </form>
+  );
+}
+
 export function TopNav() {
   const pathname = usePathname();
   const router = useRouter();
   const params = useSearchParams();
   const activeSourceId = usePrefs((s) => s.activeSourceId);
   const [q, setQ] = React.useState(params.get("q") ?? "");
+  const [mobileSearchOpen, setMobileSearchOpen] = React.useState(false);
 
   React.useEffect(() => {
     setQ(params.get("q") ?? "");
   }, [params]);
 
+  function sourceFromPath(): string | null {
+    const m = pathname.match(/^\/(?:manga|read)\/([^/]+)/);
+    return m?.[1] ?? null;
+  }
+
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const term = q.trim();
     if (!term) return;
-    const source = params.get("source") ?? activeSourceId;
+    const source =
+      params.get("source") ?? sourceFromPath() ?? activeSourceId;
     const qs = new URLSearchParams({ q: term });
     if (source) qs.set("source", source);
     router.push(`/search?${qs.toString()}`);
+    setMobileSearchOpen(false);
   }
 
   const onReader = pathname.startsWith("/read/");
@@ -92,7 +139,7 @@ export function TopNav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
+      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3">
         <Link href="/" className="text-lg font-semibold tracking-tight">
           Tachiyul
         </Link>
@@ -110,20 +157,36 @@ export function TopNav() {
             active={pathname.startsWith("/library")}
           />
         </nav>
-        <form onSubmit={onSubmit} className="ml-auto flex max-w-md flex-1">
-          <div className="relative w-full">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search manga…"
-              className="pl-9"
-            />
-          </div>
-        </form>
+
+        <div className="ml-auto hidden flex-1 max-w-md md:flex">
+          <SearchForm q={q} setQ={setQ} onSubmit={onSubmit} />
+        </div>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Search"
+          className="ml-auto md:hidden"
+          onClick={() => setMobileSearchOpen((v) => !v)}
+        >
+          <Search className="h-4 w-4" />
+        </Button>
+
         <SourcePicker sources={SOURCES} />
         <ThemeToggle />
       </div>
+
+      {mobileSearchOpen && (
+        <div className="border-t border-border bg-background px-4 py-2 md:hidden">
+          <SearchForm
+            q={q}
+            setQ={setQ}
+            onSubmit={onSubmit}
+            autoFocus
+            onClose={() => setMobileSearchOpen(false)}
+          />
+        </div>
+      )}
     </header>
   );
 }

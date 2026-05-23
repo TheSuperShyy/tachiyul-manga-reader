@@ -207,7 +207,7 @@ export const weebcentral: MangaSource = {
 
   async getPages(chapterId): Promise<PageList> {
     const html = await fetchHtml(
-      `${BASE}/chapters/${chapterId}/images?is_prev=False&reading_style=long_strip`,
+      `${BASE}/chapters/${chapterId}/images?is_prev=False&current_page=1&reading_style=long_strip`,
       {
         headers: {
           "HX-Request": "true",
@@ -219,7 +219,10 @@ export const weebcentral: MangaSource = {
     const urls: string[] = [];
     $("img").each((_, img) => {
       const src = $(img).attr("src");
-      if (src && /\.(jpe?g|png|webp)/i.test(src)) urls.push(src);
+      if (!src) return;
+      if (!/\.(jpe?g|png|webp)/i.test(src)) return;
+      if (src.includes("broken_image") || src.includes("/static/")) return;
+      urls.push(src);
     });
     return { chapterId, urls };
   },
