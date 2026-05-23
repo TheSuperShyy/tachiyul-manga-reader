@@ -15,6 +15,9 @@ const SOURCES = [
   { id: "mangadex", name: "MangaDex" },
   { id: "weebcentral", name: "WeebCentral" },
   { id: "asura", name: "AsuraScans" },
+  { id: "mangadna", name: "MangaDNA" },
+  { id: "mangafire", name: "MangaFire" },
+  { id: "mangakakalot", name: "MangaKakalot" },
 ];
 
 function NavLink({

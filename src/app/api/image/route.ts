@@ -14,6 +14,10 @@ const ALLOWED_HOSTS = new Set([
   "official.lowee.us",
   "hot.leanbox.us",
   "official.s2.mangapark.fun",
+  "mangadna.com",
+  "mangafire.to",
+  "mangakakalot.fun",
+  "mangakakalot.com",
 ]);
 
 const ALLOWED_HOST_SUFFIXES = [
@@ -28,6 +32,16 @@ const ALLOWED_HOST_SUFFIXES = [
   ".weebcentral.com",
   ".compsci88.com",
   ".officialcdn.app",
+  ".mangadna.com",
+  ".mangafire.to",
+  ".mfcdn.net",
+  ".mfcdn.io",
+  ".mkklcdnv5.com",
+  ".mkklcdnv6tempv5.com",
+  ".mkklcdnv6tempv4.com",
+  ".mangakakalot.fun",
+  ".mangakakalot.com",
+  ".mkklcdnv5tempv1.com",
 ];
 
 function isAllowed(host: string): boolean {

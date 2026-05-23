@@ -2,11 +2,17 @@ import type { MangaSource } from "./types";
 import { mangadex } from "./mangadex";
 import { weebcentral } from "./weebcentral";
 import { asura } from "./asura";
+import { mangadna } from "./mangadna";
+import { mangafire } from "./mangafire";
+import { mangakakalot } from "./mangakakalot";
 
 const sources: Record<string, MangaSource> = {
   [mangadex.id]: mangadex,
   [weebcentral.id]: weebcentral,
   [asura.id]: asura,
+  [mangadna.id]: mangadna,
+  [mangafire.id]: mangafire,
+  [mangakakalot.id]: mangakakalot,
 };
 
 export function getSource(id: string): MangaSource {
