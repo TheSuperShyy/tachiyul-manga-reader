@@ -6,13 +6,13 @@ type Size = "sm" | "md" | "lg" | "icon";
 
 const VARIANT: Record<Variant, string> = {
   default:
-    "bg-primary text-primary-foreground hover:opacity-90",
+    "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg transition-all",
   ghost:
-    "bg-transparent hover:bg-accent text-foreground",
+    "bg-transparent hover:bg-accent/50 text-foreground transition-colors",
   outline:
-    "border border-border bg-transparent hover:bg-accent text-foreground",
+    "border border-border bg-transparent hover:bg-accent/30 hover:border-primary/50 text-foreground transition-all",
   destructive:
-    "bg-destructive text-white hover:opacity-90",
+    "bg-destructive text-white hover:bg-destructive/90 shadow-md transition-all",
 };
 
 const SIZE: Record<Size, string> = {

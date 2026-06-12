@@ -126,7 +126,7 @@ export function TopNav({ sources }: { sources: VisibleSource[] }) {
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3">
         <Link href="/" className="text-lg font-semibold tracking-tight">
-          Tachiyul
+          Gurt Scans
         </Link>
         <nav className="flex items-center gap-1">
           <NavLink

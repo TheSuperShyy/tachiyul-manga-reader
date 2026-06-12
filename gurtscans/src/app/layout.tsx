@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tachiyul — Manga Reader",
-  description: "A learning-project manga reader built on MangaDex.",
+  title: "Gurt Scans",
+  description: "A manga reader built on MangaDex.",
 };
 
 export default function RootLayout({
