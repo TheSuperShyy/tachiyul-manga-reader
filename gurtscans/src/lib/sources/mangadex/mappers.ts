@@ -119,7 +119,16 @@ export function toChapter(c: MdChapterApi): Chapter {
 }
 
 export function atHomeToUrls(r: MdAtHomeResponse): string[] {
-  return r.chapter.data.map(
+  const urls = r.chapter.data.map(
     (file) => `${r.baseUrl}/data/${r.chapter.hash}/${file}`,
   );
+  
+  // Filter out potential credit pages and ads at the end
+  // Scanlation groups often add credit pages, ads, or promotional content
+  // at the end of chapters. We'll remove the last 2 images if there are more than 5 pages.
+  if (urls.length > 5) {
+    return urls.slice(0, -2);
+  }
+  
+  return urls;
 }

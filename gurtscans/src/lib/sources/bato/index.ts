@@ -238,7 +238,7 @@ export const bato: MangaSource = {
     }
 
     if (urls.length === 0) {
-      $("img[data-src*='/static/'], img[src*='batocdn'], img.page-img").each(
+      $("img.page-img").each(
         (_, el) => {
           const src = $(el).attr("data-src") ?? $(el).attr("src");
           if (src) urls.push(src);

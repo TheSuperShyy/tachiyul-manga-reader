@@ -28,10 +28,11 @@ function parseSeriesCards(html: string): MangaSummary[] {
       null;
     const title =
       $(a)
-        .find(".text-ellipsis, .truncate.text-lg, .text-white.text-center")
+        .find(".text-ellipsis, .truncate.text-lg, .text-white.text-center, .title, h3, h4, .name")
         .first()
         .text()
         .trim() ||
+      $(a).attr("title")?.trim() ||
       img.attr("alt")?.replace(/\s+cover$/i, "").trim() ||
       m[2]?.replace(/-/g, " ") ||
       "";
@@ -217,6 +218,7 @@ export const weebcentral: MangaSource = {
     );
     const $ = cheerio.load(html);
     const urls: string[] = [];
+
     $("img").each((_, img) => {
       const src = $(img).attr("src");
       if (!src) return;

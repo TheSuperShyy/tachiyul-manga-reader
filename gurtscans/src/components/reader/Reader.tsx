@@ -74,6 +74,10 @@ export function Reader({
           direction={direction}
           fitWidth={fitWidth}
           onIndexChange={setIndex}
+          sourceId={sourceId}
+          mangaId={mangaId}
+          prevChapterId={prevChapterId}
+          nextChapterId={nextChapterId}
         />
       )}
 

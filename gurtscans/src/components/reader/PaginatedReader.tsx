@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { proxied } from "@/lib/image";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +12,10 @@ interface Props {
   direction: "ltr" | "rtl";
   fitWidth: boolean;
   onIndexChange: (next: number) => void;
+  sourceId: string;
+  mangaId: string;
+  prevChapterId: string | null;
+  nextChapterId: string | null;
 }
 
 export function PaginatedReader({
@@ -19,7 +24,12 @@ export function PaginatedReader({
   direction,
   fitWidth,
   onIndexChange,
+  sourceId,
+  mangaId,
+  prevChapterId,
+  nextChapterId,
 }: Props) {
+  const router = useRouter();
   const total = pages.length;
 
   const go = React.useCallback(
@@ -36,10 +46,20 @@ export function PaginatedReader({
     function onKey(e: KeyboardEvent) {
       if (e.key === "ArrowRight") {
         e.preventDefault();
-        go(forward);
+        // If at last page and next chapter exists, go to next chapter
+        if (index === total - 1 && nextChapterId) {
+          router.push(`/read/${sourceId}/${mangaId}/${nextChapterId}`);
+        } else {
+          go(forward);
+        }
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
-        go(-forward);
+        // If at first page and previous chapter exists, go to previous chapter
+        if (index === 0 && prevChapterId) {
+          router.push(`/read/${sourceId}/${mangaId}/${prevChapterId}`);
+        } else {
+          go(-forward);
+        }
       } else if (e.key === " " || e.key === "PageDown") {
         e.preventDefault();
         go(1);
@@ -50,7 +70,7 @@ export function PaginatedReader({
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [go, forward]);
+  }, [go, forward, index, total, nextChapterId, prevChapterId, sourceId, mangaId, router]);
 
   React.useEffect(() => {
     const toPreload = pages.slice(index + 1, index + 4);

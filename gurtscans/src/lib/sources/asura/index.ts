@@ -215,10 +215,27 @@ export const asura: MangaSource = {
     const $ = cheerio.load(html);
 
     const urls: string[] = [];
+    
+    // Patterns to exclude (only obvious ads and social media)
+    const excludePatterns = [
+      /facebook/i,
+      /twitter/i,
+      /discord/i,
+      /telegram/i,
+      /patreon/i,
+      /kofi/i,
+      /donate/i,
+    ];
+
+    function shouldExclude(url: string): boolean {
+      return excludePatterns.some(pattern => pattern.test(url));
+    }
+
     $("img").each((_, el) => {
       const src = $(el).attr("src") ?? $(el).attr("data-src");
       if (!src) return;
       if (!/\.(jpe?g|png|webp)/i.test(src)) return;
+      if (shouldExclude(src)) return;
       if (
         src.includes("cdn.asurascans.com") ||
         src.includes("asuracomic.net") ||
@@ -241,7 +258,10 @@ export const asura: MangaSource = {
             /https?:\\?\/\\?\/[^"'\s\\]+\.(?:jpe?g|png|webp)/gi,
           ),
         );
-        urls.push(...matches.map((m) => m[0].replace(/\\\//g, "/")));
+        const filtered = matches
+          .map((m) => m[0].replace(/\\\//g, "/"))
+          .filter(url => !shouldExclude(url));
+        urls.push(...filtered);
       });
     }
 

@@ -26,10 +26,10 @@ function NavLink({
     <Link
       href={href}
       className={cn(
-        "flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors",
+        "flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-all duration-200",
         active
-          ? "bg-accent text-accent-foreground"
-          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+          ? "bg-primary text-primary-foreground shadow-md"
+          : "text-muted-foreground hover:bg-accent/50 hover:text-foreground hover:shadow-sm",
       )}
     >
       <Icon className="h-4 w-4" />
@@ -123,9 +123,9 @@ export function TopNav({ sources }: { sources: VisibleSource[] }) {
   if (onReader) return null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
+        <Link href="/" className="text-xl font-bold tracking-tight text-primary hover:text-primary/80 transition-colors">
           Gurt Scans
         </Link>
         <nav className="flex items-center gap-1">

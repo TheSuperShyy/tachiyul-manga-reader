@@ -166,6 +166,31 @@ export function ReaderControls({
           />
         </div>
       </div>
+
+      {/* Always-visible chapter navigation at bottom */}
+      <div className="fixed inset-x-0 bottom-0 z-10 pointer-events-none">
+        <div className="pointer-events-auto flex items-center justify-between border-t border-border bg-background/95 backdrop-blur px-4 py-3">
+          <PrevNext
+            sourceId={sourceId}
+            mangaId={mangaId}
+            chapterId={prevChapterId}
+            label="Previous Chapter"
+            icon={<ArrowLeft className="h-4 w-4" />}
+            disabled={!prevChapterId}
+          />
+          <div className="text-sm text-muted-foreground">
+            {chapterLabel}
+          </div>
+          <PrevNext
+            sourceId={sourceId}
+            mangaId={mangaId}
+            chapterId={nextChapterId}
+            label="Next Chapter"
+            icon={<ArrowRight className="h-4 w-4" />}
+            disabled={!nextChapterId}
+          />
+        </div>
+      </div>
     </>
   );
 }

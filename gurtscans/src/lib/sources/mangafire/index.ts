@@ -30,11 +30,12 @@ function parseMangaCards(html: string): MangaSummary[] {
     if (seen.has(id)) return;
 
     const img = $(a).find("img").first();
-    const cover = img.attr("src") ?? img.attr("data-src") ?? null;
+    const cover = img.attr("src") ?? img.attr("data-src") ?? img.attr("data-lazy-src") ?? null;
     const title =
       $(a).attr("title")?.trim() ||
       img.attr("alt")?.trim() ||
-      $(a).find(".name, h3, h4").first().text().trim() ||
+      $(a).find(".name, h3, h4, .title").first().text().trim() ||
+      $(a).find(".poster-title, .item-title").first().text().trim() ||
       $(a).text().trim() ||
       id.replace(/\..*$/, "").replace(/-/g, " ");
 

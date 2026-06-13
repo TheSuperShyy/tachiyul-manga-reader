@@ -56,10 +56,115 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  scroll-behavior: smooth;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Animated gradient background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse at 20% 20%, rgba(37, 99, 235, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(59, 130, 246, 0.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(30, 58, 95, 0.3) 0%, transparent 70%);
+  animation: gradientShift 15s ease-in-out infinite alternate;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes gradientShift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(2%, 2%) scale(1.02);
+  }
+  100% {
+    transform: translate(-2%, -2%) scale(1);
+  }
+}
+
+/* Floating particles */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(37, 99, 235, 0.6) 0%, transparent 2%),
+    radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.5) 0%, transparent 2%),
+    radial-gradient(circle at 50% 50%, rgba(30, 58, 95, 0.45) 0%, transparent 2%);
+  background-size: 100px 100px, 150px 150px, 200px 200px;
+  animation: particles 20s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+@keyframes particles {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-10px);
+  }
+  75% {
+    transform: translateY(-30px) translateX(5px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
 }
 
 @layer base {
   * {
     border-color: var(--border);
   }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Subtle fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
